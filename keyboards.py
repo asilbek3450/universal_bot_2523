@@ -23,3 +23,8 @@ channels_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="📢 2-kanalga obuna bo'lish", url=CHANNELS_URL[1])],
     [InlineKeyboardButton(text="📢 3-kanalga obuna bo'lish", url=CHANNELS_URL[2])],
 ])
+
+wikipedia_lang_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, keyboard=[
+    [KeyboardButton(text="🇺🇿 O'zbekcha"), KeyboardButton(text="🇷🇺 Русский"), KeyboardButton(text="🇺🇸 English")],
+    [KeyboardButton(text="🔙 Orqaga")],
+])

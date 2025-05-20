@@ -5,13 +5,19 @@ class ChatGPTStates(StatesGroup):
     answer = State()
 
 class WikipediaStates(StatesGroup):
+    language = State()
     search = State()
 
 class WeatherStates(StatesGroup):
     ask_city = State()
 
 class CurrencyStates(StatesGroup):
-    ask_currency = State()
+    valyutadan = State()
+    valyutaga = State()
+    qancha = State()
 
 class TranslateStates(StatesGroup):
-    ask_text = State()
+    qaysi_tildan = State()
+    qaysi_tilga = State()
+    matn = State()
+    
