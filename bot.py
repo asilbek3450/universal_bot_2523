@@ -10,6 +10,7 @@ from states import ChatGPTStates, WikipediaStates, WeatherStates, CurrencyStates
 from functions import check_all_channel_subscription
 from handlers.wikipedia import wikipediya_javob, wikipediya_til
 from handlers.chatgpt import chatgpt_javob
+from handlers.translate import translate_text_function, translate_text
 logging.basicConfig(level=logging.INFO)
 
 
@@ -53,8 +54,8 @@ async def handle_menu(message: Message, state: FSMContext):
         await state.set_state(CurrencyStates.valyutadan)
         await message.answer("Valyuta kodini yozing (masalan: USD, EUR):")
     elif text == "🌍 Tarjima":
-        await state.set_state(TranslateStates.qaysi_tildan)
-        await message.answer("Qaysi tildan tarjima qilish kerak:")
+        await state.set_state(TranslateStates.tildan_tilga)
+        await message.answer("Qaysi tildan qaysi tilga tarjima qilish kerak:")
     elif text == "🔙 Orqaga":
         await state.clear()
         await message.answer("Bosh menyuga qaytdingiz.", reply_markup=main_menu)
@@ -73,6 +74,16 @@ async def wikipedia_handler(message: Message, state: FSMContext):
 async def chatgpt_handler(message: Message, state: FSMContext):
     await chatgpt_javob(message, state)
     await message.answer("Bosh menyuga qaytdingiz.", reply_markup=main_menu)
+
+
+@dp.message(TranslateStates.tildan_tilga)
+async def tarjima_til(call: types.CallbackQuery, state: FSMContext):
+    await translate_text(call, state)
+
+@dp.message(TranslateStates.matn)
+async def tarjima_matn(message: Message, state: FSMContext):
+    await translate_text_function(message, state)
+
 
 
 async def main():

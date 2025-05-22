@@ -28,3 +28,9 @@ wikipedia_lang_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_key
     [KeyboardButton(text="🇺🇿 O'zbekcha"), KeyboardButton(text="🇷🇺 Русский"), KeyboardButton(text="🇺🇸 English")],
     [KeyboardButton(text="🔙 Orqaga")],
 ])
+
+translation_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton("🇺🇿 ▶️ 🇷🇺", callback_data='uz_ru'), InlineKeyboardButton("🇷🇺 ▶️ 🇺🇿", callback_data='ru_uz')],
+    [InlineKeyboardButton("🇺🇸 ▶️ 🇷🇺", callback_data='en_ru'), InlineKeyboardButton("🇷🇺 ▶️ 🇺🇸", callback_data='ru_en')],
+    [InlineKeyboardButton("🇺🇸 ▶️ 🇺🇿", callback_data='en_uz'), InlineKeyboardButton("🇺🇿 ▶️ 🇺🇸", callback_data='uz_en')]
+])

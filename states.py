@@ -17,7 +17,6 @@ class CurrencyStates(StatesGroup):
     qancha = State()
 
 class TranslateStates(StatesGroup):
-    qaysi_tildan = State()
-    qaysi_tilga = State()
+    tildan_tilga = State()
     matn = State()
     
