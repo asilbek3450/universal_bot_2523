@@ -3,9 +3,10 @@ import logging
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import Message
 from aiogram.filters import CommandStart
-from keyboards import main_menu, location_keyboard, channels_keyboard, wikipedia_lang_keyboard
+from keyboards import main_menu, location_keyboard, channels_keyboard, wikipedia_lang_keyboard, translation_keyboard
 from config import BOT_TOKEN, CHANNELS_ID
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.storage.memory import MemoryStorage
 from states import ChatGPTStates, WikipediaStates, WeatherStates, CurrencyStates, TranslateStates
 from functions import check_all_channel_subscription
 from handlers.wikipedia import wikipediya_javob, wikipediya_til
@@ -15,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher()
+dp = Dispatcher(storage=MemoryStorage())
 
 # @dp.message_handler(commands=['start']) -> aiogram==2.25.1
 @dp.message(CommandStart() or F.text == "🔙 Orqaga")
@@ -55,7 +56,7 @@ async def handle_menu(message: Message, state: FSMContext):
         await message.answer("Valyuta kodini yozing (masalan: USD, EUR):")
     elif text == "🌍 Tarjima":
         await state.set_state(TranslateStates.tildan_tilga)
-        await message.answer("Qaysi tildan qaysi tilga tarjima qilish kerak:")
+        await message.answer("Qaysi tildan qaysi tilga tarjima qilish kerak:", reply_markup=translation_keyboard)
     elif text == "🔙 Orqaga":
         await state.clear()
         await message.answer("Bosh menyuga qaytdingiz.", reply_markup=main_menu)
@@ -76,7 +77,7 @@ async def chatgpt_handler(message: Message, state: FSMContext):
     await message.answer("Bosh menyuga qaytdingiz.", reply_markup=main_menu)
 
 
-@dp.message(TranslateStates.tildan_tilga)
+@dp.callback_query(TranslateStates.tildan_tilga)
 async def tarjima_til(call: types.CallbackQuery, state: FSMContext):
     await translate_text(call, state)
 
