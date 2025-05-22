@@ -29,8 +29,21 @@ wikipedia_lang_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_key
     [KeyboardButton(text="🔙 Orqaga")],
 ])
 
-translation_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton("🇺🇿 ▶️ 🇷🇺", callback_data='uz_ru'), InlineKeyboardButton("🇷🇺 ▶️ 🇺🇿", callback_data='ru_uz')],
-    [InlineKeyboardButton("🇺🇸 ▶️ 🇷🇺", callback_data='en_ru'), InlineKeyboardButton("🇷🇺 ▶️ 🇺🇸", callback_data='ru_en')],
-    [InlineKeyboardButton("🇺🇸 ▶️ 🇺🇿", callback_data='en_uz'), InlineKeyboardButton("🇺🇿 ▶️ 🇺🇸", callback_data='uz_en')]
-])
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+translation_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="🇺🇿 ▶️ 🇷🇺", callback_data='uz_ru'),
+            InlineKeyboardButton(text="🇷🇺 ▶️ 🇺🇿", callback_data='ru_uz')
+        ],
+        [
+            InlineKeyboardButton(text="🇺🇸 ▶️ 🇷🇺", callback_data='en_ru'),
+            InlineKeyboardButton(text="🇷🇺 ▶️ 🇺🇸", callback_data='ru_en')
+        ],
+        [
+            InlineKeyboardButton(text="🇺🇸 ▶️ 🇺🇿", callback_data='en_uz'),
+            InlineKeyboardButton(text="🇺🇿 ▶️ 🇺🇸", callback_data='uz_en')
+        ],
+    ]
+)
