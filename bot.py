@@ -3,20 +3,23 @@ import logging
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import Message
 from aiogram.filters import CommandStart
-from keyboards import main_menu, location_keyboard, channels_keyboard, wikipedia_lang_keyboard, translation_keyboard
+from keyboards import main_menu, location_keyboard, channels_keyboard, wikipedia_lang_keyboard, from_lang_keyboard, from_to_currency_keyboard
 from config import BOT_TOKEN, CHANNELS_ID
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.storage.memory import MemoryStorage
 from states import ChatGPTStates, WikipediaStates, WeatherStates, CurrencyStates, TranslateStates
 from functions import check_all_channel_subscription
 from handlers.wikipedia import wikipediya_javob, wikipediya_til
 from handlers.chatgpt import chatgpt_javob
-from handlers.translate import translate_text_function, translate_text
+from handlers.translate import translator_tildan, translator_tilga, matn_tarjima   
+from handlers.weather import obhavo_javob
+from handlers.valyuta import process_currency_conversion
+from aiogram.types import ReplyKeyboardRemove
+from states import CurrencyStates
 logging.basicConfig(level=logging.INFO)
 
 
 bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(storage=MemoryStorage())
+dp = Dispatcher()
 
 # @dp.message_handler(commands=['start']) -> aiogram==2.25.1
 @dp.message(CommandStart() or F.text == "🔙 Orqaga")
@@ -48,15 +51,22 @@ async def handle_menu(message: Message, state: FSMContext):
     elif text == "🔎 Wikipedia":
         await state.set_state(WikipediaStates.language)
         await message.answer("Wikipedia uchun til tanlang:", reply_markup=wikipedia_lang_keyboard)
+
+    elif text == "🌍 Tarjima":
+        await state.set_state(TranslateStates.qaysi_tildan)
+        await message.answer("Qaysi tildan tarjima qilish kerak:", reply_markup=from_lang_keyboard)
     
+
     elif text == "🌦️ Ob-havo":
-        await message.answer(text="Siz ob-havo bo'limiga kirdingiz, obhavoni bilish uchun lokatsiya jo'nating", reply_markup=location_keyboard)
+        await state.set_state(WeatherStates.ask_city)       
+        await message.answer(text="Ob-havoni bilish uchun shaharni jo'nating")
+    
+    
     elif text == "💸 Valyuta":
         await state.set_state(CurrencyStates.valyutadan)
-        await message.answer("Valyuta kodini yozing (masalan: USD, EUR):")
-    elif text == "🌍 Tarjima":
-        await state.set_state(TranslateStates.tildan_tilga)
-        await message.answer("Qaysi tildan qaysi tilga tarjima qilish kerak:", reply_markup=translation_keyboard)
+        await message.answer("Valyuta kodini yozing :" , reply_markup=from_to_currency_keyboard)
+   
+   
     elif text == "🔙 Orqaga":
         await state.clear()
         await message.answer("Bosh menyuga qaytdingiz.", reply_markup=main_menu)
@@ -71,25 +81,65 @@ async def wikipedia_language_handler(message: Message, state: FSMContext):
 async def wikipedia_handler(message: Message, state: FSMContext):
     await wikipediya_javob(message, state)
 
+
+
 @dp.message(ChatGPTStates.question)
 async def chatgpt_handler(message: Message, state: FSMContext):
     await chatgpt_javob(message, state)
     await message.answer("Bosh menyuga qaytdingiz.", reply_markup=main_menu)
 
 
-@dp.callback_query(TranslateStates.tildan_tilga)
-async def tarjima_til(call: types.CallbackQuery, state: FSMContext):
-    await translate_text(call, state)
+
+@dp.message(TranslateStates.qaysi_tildan)
+async def translator_tildan_handler(message: Message, state: FSMContext):
+    await translator_tildan(message, state)
+
+@dp.message(TranslateStates.qaysi_tilga)
+async def translator_tilga_handler(message: Message, state: FSMContext):
+    await translator_tilga(message, state)
 
 @dp.message(TranslateStates.matn)
-async def tarjima_matn(message: Message, state: FSMContext):
-    await translate_text_function(message, state)
+async def matn_tarjima_handler(message: Message, state: FSMContext):
+    await matn_tarjima(message, state)
+    await message.answer("Bosh menyuga qaytdingiz.", reply_markup=main_menu)
 
+
+
+@dp.message(WeatherStates.ask_city)
+async def weather_city_handler(message: Message, state: FSMContext):
+    await obhavo_javob(message, state)
+    await message.answer("Bosh menyuga qaytdingiz.", reply_markup=main_menu)
+
+
+
+
+@dp.message(CurrencyStates.valyutadan)
+async def from_currency_chosen(message: Message, state: FSMContext):
+    from_ccy = message.text.strip().upper()
+    await state.update_data(from_ccy=from_ccy)
+    await message.answer("Qaysi valyutaga o‘girmoqchisiz?", reply_markup=from_to_currency_keyboard)
+    await state.set_state(CurrencyStates.valyutaga)
+
+
+
+@dp.message(CurrencyStates.valyutaga)
+async def to_currency_chosen(message: Message, state: FSMContext):
+    to_ccy = message.text.strip().upper()
+    await state.update_data(to_ccy=to_ccy)
+    await message.answer("O‘girmoqchi bo‘lgan miqdorni kiriting (faqat son):", reply_markup=ReplyKeyboardRemove())
+    await state.set_state(CurrencyStates.qancha)
+
+
+
+@dp.message(CurrencyStates.qancha)
+async def amount_entered_handler(message: Message, state: FSMContext):
+    await process_currency_conversion(message, state)
 
 
 async def main():
     await dp.start_polling(bot)
-    
+
 
 if __name__ == "__main__":
     asyncio.run(main())
+

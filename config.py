@@ -1,5 +1,6 @@
-BOT_TOKEN='7770700132:AAHyv8mMtj0jSPLD7pB8ec-YLJYHYI1-d1g'
-CHANNELS_URL = ['https://t.me/asilbekmirolimov', 
-                'https://t.me/Abduqahhor_is_history',
-                'https://t.me/trentmyuzik']
-CHANNELS_ID = ['-1001687130068', '-1002473956918', '-1002133045821']
+BOT_TOKEN='8099480399:AAFKnatmBM-T02D8hJ7_eVVNwfml9wnRAqc'
+CHANNELS_URL = ['https://t.me/testoviy_kanal_2312']
+WEATHER_API_KEY = "8586b74363c1378f792812deeafa2f30"
+CHANNELS_ID = [-1002616712062]
+
+
