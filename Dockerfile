@@ -23,4 +23,4 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels -r requirements.t
 COPY . .
 
 # Botni ishga tushuramiz
-CMD ["python", "-u", "bot.py"]
+CMD ["python", "-u", "main.py"]
