@@ -1,4 +1,4 @@
-BOT_TOKEN='7770700132:AAHyv8mMtj0jSPLD7pB8ec-YLJYHYI1-d1g'
+BOT_TOKEN='7770700132:AAHvrWrXtyjBYATmntrIfpHCY-Y0fq_U3xw'
 CHANNELS_URL = ['https://t.me/asilbekmirolimov', 
                 'https://t.me/Abduqahhor_is_history',
                 'https://t.me/trentmyuzik']

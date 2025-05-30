@@ -1,5 +1,5 @@
 # 1-bosqich: builder image
-FROM python:3.13-slim as builder
+FROM python:3.11-slim as builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
 # 2-bosqich: final image
-FROM python:3.13-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
